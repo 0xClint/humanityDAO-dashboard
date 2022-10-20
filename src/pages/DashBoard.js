@@ -1,27 +1,29 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { FiSettings } from "react-icons/fi";
 import { TooltipComponent } from "@syncfusion/ej2-react-popups";
-import "./App.css";
-import { Navbar, Sidebar, ThemeSettings } from "./components";
-import { Overview, Employees } from "./pages";
-import { useStateContext } from "./contexts/ContextProvider";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import "../App.css";
+import { Navbar, Sidebar, ThemeSettings } from "../components";
+// import { Overview, Employees } from "./pages";
+import { useStateContext } from "../contexts/ContextProvider";
 import {
+  Overview,
   Login,
   Projects,
   ProjectForm,
+  Employees,
   Tasks,
   TaskCard,
   Todo,
   ProjectDetails,
-} from "./pages/index";
+} from "./index";
 
-function App() {
-  const { activeMenu, currentColor, themeSettings, setThemeSettings, isHome } =
+const DashBoard = () => {
+  const { activeMenu, currentColor, themeSettings, setThemeSettings } =
     useStateContext();
 
   return (
-    <div className="App">
+    <div className="w-[100vw]">
       <BrowserRouter>
         <div className="flex relative dark:bg-main-dark-bg">
           <div className="fixed right-4 bottom-4" style={{ zIndex: "1000" }}>
@@ -53,27 +55,28 @@ function App() {
             </div>
             {themeSettings && <ThemeSettings />}
             <Routes>
-              <Route path="/" element={<Overview />} />
+              {/* DashBoard */}
+              <Route path="/dashboard/" element={<DashBoard />} />
+              {/* <Route path="/dashboard/" element={<Overview />} /> */}
               <Route path="/overview" element={<Overview />} />
 
               {/* pages  */}
               <Route path="/login" element={<Login />} />
               <Route path="/projects" element={<Projects />} />
-              <Route
-                path="/dashboard/projects/form"
-                element={<ProjectForm />}
-              />
+              <Route path="/projects/form" element={<ProjectForm />} />
               <Route path="/employees" element={<Employees />} />
               <Route path="/tasks" element={<Tasks />} />
               <Route path="/tasks/:id" element={<TaskCard />} />
               <Route path="/tasks/p/:id" element={<Todo />} />
-              <Route path="projects/:id" element={<ProjectDetails />} />
+              <Route path="/projects/:id" element={<ProjectDetails />} />
             </Routes>
+            {/* </div> */}
+            {/* </div> */}
           </div>
         </div>
       </BrowserRouter>
     </div>
   );
-}
+};
 
-export default App;
+export default DashBoard;
