@@ -11,7 +11,7 @@ import {
 } from "@syncfusion/ej2-react-grids";
 
 const GridTask = ({ data }) => {
-  console.log(data);
+  // console.log(data);
   const pageSettings = { pageSize: 6 };
   return (
     <div>

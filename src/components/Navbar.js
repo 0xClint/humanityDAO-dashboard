@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
 import { RiNotification3Line } from "react-icons/ri";
 import { MdKeyboardArrowDown } from "react-icons/md";
@@ -6,6 +6,7 @@ import { TooltipComponent } from "@syncfusion/ej2-react-popups";
 import avatar from "../assets/avatar2.jpg";
 import { Cart, Chat, Notification, UserProfile } from ".";
 import { useStateContext } from "../contexts/ContextProvider";
+import { Constants } from "../utils/Constants";
 
 const NavButton = ({ title, customFunc, icon, color, dotColor }) => (
   <TooltipComponent content={title} position="BottomCenter">
@@ -35,9 +36,11 @@ const Navbar = () => {
     setScreenSize,
     screenSize,
   } = useStateContext();
+  const [user, setUser] = useState();
 
   useEffect(() => {
     const handleResize = () => setScreenSize(window.innerWidth);
+    setUser(JSON.parse(localStorage.getItem(Constants.USER_PROFILE)));
 
     window.addEventListener("resize", handleResize);
 
@@ -85,7 +88,7 @@ const Navbar = () => {
             <p>
               <span className="text-gray-400 text-14">Hi,</span>
               <span className="text-gray-400 font-bold ml-1 text-14">
-                Michael
+                {user}
               </span>
             </p>
             <MdKeyboardArrowDown className="text-gray-400 text-14" />

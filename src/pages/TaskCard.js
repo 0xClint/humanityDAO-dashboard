@@ -1,17 +1,46 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useStateContext } from "../contexts/ContextProvider";
 import Doughnut from "../components/Charts/Pie";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import { EditSubTask } from "../redux/SubTaskReducer";
 import { pieChartData } from "../assets/dummy";
 import { FetchAllTask } from "../redux/TaskReducer";
 
 const TaskCard = () => {
   const { currentColor } = useStateContext();
   const params = useParams();
-  // console.log(params.id);
+  const [ischeck, setIsCheck] = useState(false);
+  const [isChange, setIsChange] = useState(false);
   const dispatch = useDispatch();
+
+  const handleCheck = async (subtask) => {
+    setIsCheck(!subtask.isComplete);
+    setIsChange(!isChange);
+    // console.log(subtask, ischeck);
+
+    const values = {
+      data: {
+        title: subtask.title,
+        description: subtask.description,
+        dueOn: subtask.dueOn,
+        assignedto: subtask.assignedto,
+        isComplete: ischeck,
+      },
+    };
+
+    await dispatch(
+      EditSubTask({
+        payload: values,
+        query: subtask._id,
+        callback: async (msg, data, recall) => {
+          await console.log(msg, recall, data);
+        },
+      })
+    );
+    // window.location.reload();
+  };
 
   useEffect(() => {
     console.log("Hello");
@@ -20,12 +49,13 @@ const TaskCard = () => {
         // callback:
       })
     );
-  }, []);
+  }, [isChange]);
 
   const allTasks = useSelector((data) => data.AllTasks.tasks);
-  console.log(allTasks);
+  // console.log(allTasks);
   let TaskDetails = allTasks.filter((item) => item._id == params.id);
   console.log(TaskDetails[0]);
+
   return (
     <div>
       <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
@@ -46,37 +76,13 @@ const TaskCard = () => {
                 {TaskDetails[0] ? TaskDetails[0].projectid.title : "temp"}
               </p>
             </div>
-            <div className="right h-26 w-24 bg-slate-400 rounded-[50%]">
-              {/* <TaskPieChart data={pieChartData} /> */}
-            </div>
+            <div className="right h-26 w-24 bg-slate-400 rounded-[50%]"></div>
           </div>
           <p className="my-8 text-lg mr-10">
             {TaskDetails[0] ? TaskDetails[0].description : "temp"}
           </p>
           <div className="taskOverview flex justify-between">
             <div className="taskContainer ">
-              {/* <div className="task flex ml-5 gap-3 items-center my-5">
-                <input
-                  className="h-6 w-6 border border-gray-300 rounded-3xl checked:bg-[#22A80D] transition duration-200"
-                  type="checkbox"
-                  value=""
-                />
-                <label className="text-xl">To-Do 1</label>
-                <div
-                  className="bg-[#2C4DFC] rounded-xl text-white text-sm cursor-pointer"
-                  style={{ backgroundColor: currentColor }}
-                >
-                  <p className="mx-3 my-1">5 Comments</p>
-                </div>
-              </div> */}
-              {/* <div className="task flex ml-5 gap-3 items-center my-5">
-                <input
-                  className="h-6 w-6 border border-gray-300 rounded-3xl checked:bg-[#22A80D] transition duration-200"
-                  type="checkbox"
-                  value=""
-                />
-                <label className="text-xl">To-Do 1</label>
-              </div> */}
               {TaskDetails[0]
                 ? TaskDetails[0].subtasks.map((item) => (
                     <div className="task flex ml-5 gap-3 items-center my-5">
@@ -84,13 +90,21 @@ const TaskCard = () => {
                         className="h-6 w-6 border border-gray-300 rounded-3xl checked:bg-[#22A80D] transition duration-200"
                         type="checkbox"
                         value=""
+                        checked={item.isComplete}
+                        onChange={() => handleCheck(item)}
                       />
                       <label className="text-xl">{item.title}</label>
                     </div>
                   ))
                 : "temp"}
 
-              <Link to={`/tasks/subtasks/form/${TaskDetails[0]._id}`}>
+              <Link
+                to={
+                  TaskDetails[0]
+                    ? `/tasks/subtasks/form/${TaskDetails[0]._id}`
+                    : `/tasks/subtasks/form/`
+                }
+              >
                 <button
                   style={{ backgroundColor: currentColor }}
                   className="text-xl opacity-0.9 text-white hover:drop-shadow-xl rounded-md  p-3 ml-10 my-5"

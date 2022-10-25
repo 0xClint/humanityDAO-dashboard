@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { earningData, pieChartData } from "../assets/dummy";
 import { useStateContext } from "../contexts/ContextProvider";
 import Doughnut from "../components/Charts/Pie";
@@ -21,6 +21,7 @@ const Overview = () => {
     isNavbar,
     setActiveMenu,
   } = useStateContext();
+  const [user, setUser] = useState();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -31,9 +32,11 @@ const Overview = () => {
 
   useEffect(() => {
     if (!localStorage.getItem(Constants.AUTH_TOKEN)) {
-      console.log(localStorage.getItem(Constants.AUTH_TOKEN), "add");
+      console.log(localStorage.getItem(Constants.AUTH_TOKEN));
+      // console.log(user, "asf");
       navigate("/login");
     }
+    setUser(JSON.parse(localStorage.getItem(Constants.USER_PROFILE)));
     dispatch(
       FetchAllProject({
         // callback:()
@@ -56,7 +59,9 @@ const Overview = () => {
           <div className="flex justify-between items-center">
             <div>
               {/* <p className="font-bold text-gray-400">Earnings</p> */}
-              <p className="text-2xl font-bold">Welcome To Humanity DAO</p>
+              <p className="text-2xl font-bold">
+                Hi {user},Welcome To Humanity DAO
+              </p>
             </div>
           </div>
         </div>

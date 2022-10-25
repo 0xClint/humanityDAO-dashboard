@@ -1,13 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { MdOutlineCancel } from "react-icons/md";
-
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from ".";
 import { userProfileData } from "../assets/dummy";
 import { useStateContext } from "../contexts/ContextProvider";
 import avatar from "../assets/avatar.jpg";
+import { Constants } from "../utils/Constants";
 
 const UserProfile = () => {
   const { currentColor } = useStateContext();
+  const [user, setUser] = useState();
+
+  useEffect(() => {
+    setUser(JSON.parse(localStorage.getItem(Constants.USER_PROFILE)));
+  });
+
+  const handleLogout = () => {};
 
   return (
     <div className="nav-item absolute right-1 top-16 bg-white dark:bg-[#42464D] p-8 rounded-lg w-96">
@@ -22,58 +30,46 @@ const UserProfile = () => {
         />
       </div>
       <div className="flex gap-5 items-center mt-6 border-color border-b-1 pb-6">
-        <img
-          className="rounded-full h-24 w-24"
-          src={avatar}
-          alt="user-profile"
-        />
         <div>
-          <p className="font-semibold text-xl dark:text-gray-200">
-            {" "}
-            Michael Roberts{" "}
-          </p>
-          <p className="text-gray-500 text-sm dark:text-gray-400">
-            {" "}
-            Administrator{" "}
-          </p>
-          <p className="text-gray-500 text-sm font-semibold dark:text-gray-400">
-            {" "}
-            info@shop.com{" "}
-          </p>
+          <p className="font-semibold text-xl dark:text-gray-200"> {user} </p>
         </div>
       </div>
       <div>
-        {userProfileData.map((item, index) => (
-          <div
-            key={index}
-            className="flex gap-5 border-b-1 border-color p-4 hover:bg-light-gray cursor-pointer  dark:hover:bg-[#42464D]"
-          >
-            <button
-              type="button"
-              style={{ color: item.iconColor, backgroundColor: item.iconBg }}
-              className=" text-xl rounded-lg p-3 hover:bg-light-gray"
-            >
-              {item.icon}
-            </button>
-
-            <div>
-              <p className="font-semibold dark:text-gray-200 ">{item.title}</p>
-              <p className="text-gray-500 text-sm dark:text-gray-400">
-                {" "}
-                {item.desc}{" "}
-              </p>
-            </div>
-          </div>
-        ))}
+        <div className="flex flex-col gap-5 border-b-1 border-color p-4 hover:bg-light-gray cursor-pointer  dark:hover:bg-[#42464D]">
+          <Link to={`/projects`}>
+            <p className="font-semibold dark:text-gray-200 ">Projects</p>
+            <p className="text-gray-500 text-sm dark:text-gray-400">
+              View all projects
+            </p>
+          </Link>
+        </div>
+        <div className="flex flex-col gap-5 border-b-1 border-color p-4 hover:bg-light-gray cursor-pointer  dark:hover:bg-[#42464D]">
+          <Link to={`/tasks`}>
+            <p className="font-semibold dark:text-gray-200 ">Tasks</p>
+            <p className="text-gray-500 text-sm dark:text-gray-400">
+              View all tasks
+            </p>
+          </Link>
+        </div>
+        <div className="flex flex-col gap-5 border-b-1 border-color p-4 hover:bg-light-gray cursor-pointer  dark:hover:bg-[#42464D]">
+          <Link to={`/employees`}>
+            <p className="font-semibold dark:text-gray-200 ">Employees</p>
+            <p className="text-gray-500 text-sm dark:text-gray-400">
+              view all employees
+            </p>
+          </Link>
+        </div>
       </div>
       <div className="mt-5">
-        <Button
-          color="white"
-          bgColor={currentColor}
-          text="Logout"
-          borderRadius="10px"
-          width="full"
-        />
+        <Link to="/login">
+          <button
+            onClick={handleLogout()}
+            style={{ backgroundColor: currentColor }}
+            className="text-xl opacity-0.9 text-white hover:drop-shadow-xl rounded-md  p-3"
+          >
+            Logout
+          </button>
+        </Link>
       </div>
     </div>
   );

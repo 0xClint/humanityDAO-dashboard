@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 const LoginPage = () => {
   const { setIsSidebar, setIsNavbar, setActiveMenu } = useStateContext();
   const [email, setEmail] = useState("");
+  const [alert, setAlert] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const navigation = useNavigate();
@@ -16,41 +17,27 @@ const LoginPage = () => {
   setIsNavbar(false);
   setActiveMenu(false);
 
-  const handleClick = () => {
-    // console.log("Loging Up");
+  const handleClick = async () => {
     const values = {
-      email: "asdd@gmail.com",
-      password: "Locked@09876",
-      // email,
-      //  password,
+      email,
+      password,
     };
     dispatch(
-      Login({
+      await Login({
         payload: values,
-        callback: (msg, data, recall) => {
+        callback: async (msg, data, recall) => {
           console.log(msg, recall, data.data);
-          if (msg === "error" || data.error) {
-            // setSubmitting(false);
-            toast.error(
-              typeof data === "string" ? data : "Something went wrong",
-              {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-              }
-            );
+          if (msg === "error") {
+            setAlert(data);
+          } else {
+            console.log(data);
+            recall();
+            setIsSidebar(true);
+            setIsNavbar(true);
+            setActiveMenu(true);
+            navigation(`/overview/`);
+            window.location.reload();
           }
-          console.log(data.error);
-          recall();
-          setIsSidebar(true);
-          setIsNavbar(true);
-          setActiveMenu(true);
-          navigation(`/overview/`);
-          window.location.reload();
         },
       })
     );
@@ -90,12 +77,15 @@ const LoginPage = () => {
             className="px-3 py-1.5 font-normal  text-gray-700 bg-white bg-clip-padding mb-2 border border-solid border-gray-300 rounded transition"
           />
         </div>
+        <div className="min:h-6 text-red-700">{alert ? alert : ""}</div>
+        {/* <Link to={`/overview`}> */}
         <button
           className="text-xl opacity-0.9 bg-[#5033ff] text-white hover:drop-shadow-xl rounded-md w-full p-3"
           onClick={() => handleClick()}
         >
           Sign in
         </button>
+        {/* </Link> */}
       </div>
     </div>
   );

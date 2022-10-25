@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useStateContext } from "../contexts/ContextProvider";
 import { useDispatch } from "react-redux";
 import { AddProject } from "../redux/ProjectReducer";
+import { Link } from "react-router-dom";
 
 const ProjectForm = () => {
   const { currentColor } = useStateContext();
@@ -54,13 +55,15 @@ const ProjectForm = () => {
           block px-3 py-1.5 font-normal  text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition"
           />
         </div>
-        <button
-          style={{ backgroundColor: currentColor }}
-          onClick={() => handleClick()}
-          className="text-xl opacity-0.9 text-white hover:drop-shadow-xl rounded-md w-32 p-3"
-        >
-          Submit
-        </button>
+        <Link to={`/projects`}>
+          <button
+            style={{ backgroundColor: currentColor }}
+            onClick={() => handleClick()}
+            className="text-xl opacity-0.9 text-white hover:drop-shadow-xl rounded-md w-32 p-3"
+          >
+            Submit
+          </button>
+        </Link>
       </div>
     </div>
   );

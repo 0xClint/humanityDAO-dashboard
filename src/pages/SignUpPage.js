@@ -1,17 +1,19 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Web3 from "web3";
 import { useDispatch } from "react-redux";
 import { useStateContext } from "../contexts/ContextProvider";
 import { SignUp } from "../redux/AuthReducer";
-import { toast } from "react-toastify";
 
 const SignUpPage = () => {
   const { setIsSidebar, setIsNavbar, setActiveMenu } = useStateContext();
   const [isConnected, setIsConnected] = useState(false);
   const [address, setAddress] = useState("");
-  const [name, setname] = useState("");
+  const [alert, setAlert] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigation = useNavigate();
 
   const dispatch = useDispatch();
 
@@ -47,7 +49,7 @@ const SignUpPage = () => {
         await setAddress(account);
         // await setBalance(ethBalance);
         await setIsConnected(true);
-        // console.log(address);
+        console.log(address);
       }
     } catch (error) {
       console.log(error);
@@ -55,11 +57,15 @@ const SignUpPage = () => {
   };
 
   const handleSubmit = () => {
-    console.log("signing Up");
+    // console.log("signing Up");
     const values = {
-      email: "omkar@gmail.com",
+      // email,
+      // name,
+      address,
+      // password,
+      email: "o@gmail.com",
       password: "Password@123",
-      address: "1234",
+      // address: "1234",
       name: "Omkasd",
     };
 
@@ -67,24 +73,14 @@ const SignUpPage = () => {
       SignUp({
         payload: values,
         callback: (msg, data, recall) => {
-          if (msg === "error" || data.error) {
-            // setSubmitting(false);
-            toast.error(
-              typeof data === "string" ? data : "Something went wrong",
-              {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-              }
-            );
-            // show error message data.error or Something went wrong using toast
+          if (msg === "error") {
+            setAlert(data);
+          } else {
+            console.log(data);
+            navigation(`/login`);
+            // window.location.reload();
+            recall();
           }
-          console.log(msg, data, recall);
-          recall();
         },
       })
     );
@@ -103,10 +99,22 @@ const SignUpPage = () => {
       <div className="loginCointainer bg-white w-[500px] rounded-md shadow-md px-14 py-12 flex flex-col items-center gap-8">
         <div className="question flex flex-col gap-2 w-full">
           <label htmlFor="" className="font-semibold text-[#414141]">
+            Name
+          </label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="px-3 py-1.5 font-normal  text-gray-700 bg-white bg-clip-padding border  border-solid border-gray-300 rounded transition"
+          />
+        </div>
+        <div className="question flex flex-col gap-2 w-full">
+          <label htmlFor="" className="font-semibold text-[#414141]">
             Email address
           </label>
           <input
             type="text"
+            value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="px-3 py-1.5 font-normal  text-gray-700 bg-white bg-clip-padding border  border-solid border-gray-300 rounded transition"
           />
@@ -117,6 +125,7 @@ const SignUpPage = () => {
           </label>
           <input
             type="text"
+            value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="px-3 py-1.5 font-normal  text-gray-700 bg-white bg-clip-padding mb-2 border border-solid border-gray-300 rounded transition"
           />
@@ -127,12 +136,14 @@ const SignUpPage = () => {
         >
           Connect Wallet
         </button>
+        {/* <Link to={`/login`}> */}
         <button
           className="text-xl opacity-0.9 bg-[#5033ff] text-white hover:drop-shadow-xl rounded-md w-full p-3"
           onClick={handleSubmit}
         >
           Sign Up
         </button>
+        {/* </Link> */}
       </div>
     </div>
   );

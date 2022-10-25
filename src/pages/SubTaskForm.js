@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { useStateContext } from "../contexts/ContextProvider";
 import { AddSubTask } from "../redux/SubTaskReducer";
 import { useParams } from "react-router-dom";
@@ -17,8 +18,8 @@ const SubTaskForm = () => {
   const handleClick = () => {
     const values = {
       data: {
-        title: "To-Do 3",
-        description: "To-Do 3 brief",
+        title,
+        description,
         dueOn: dueDate,
         assignedto: "63515c79fbc67a82f6fa89c0",
       },
@@ -59,8 +60,8 @@ const SubTaskForm = () => {
           <label htmlFor="">Assigned To</label>
           <input
             type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            // value={title}
+            // onChange={(e) => setTitle(e.target.value)}
             className="
       block px-3 py-1.5 font-normal  text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition"
           />
@@ -108,13 +109,15 @@ const SubTaskForm = () => {
       block px-3 py-1.5 font-normal  text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition"
           />
         </div>
-        <button
-          style={{ backgroundColor: currentColor }}
-          onClick={() => handleClick()}
-          className="text-xl opacity-0.9 text-white hover:drop-shadow-xl rounded-md w-32 p-3"
-        >
-          Submit
-        </button>
+        <Link to={`/tasks`}>
+          <button
+            style={{ backgroundColor: currentColor }}
+            onClick={() => handleClick()}
+            className="text-xl opacity-0.9 text-white hover:drop-shadow-xl rounded-md w-32 p-3"
+          >
+            Submit
+          </button>
+        </Link>
       </div>
     </div>
   );
