@@ -59,14 +59,14 @@ const SignUpPage = () => {
   const handleSubmit = () => {
     // console.log("signing Up");
     const values = {
-      // email,
-      // name,
+      email,
+      name,
       address,
-      // password,
-      email: "o@gmail.com",
-      password: "Password@123",
+      password,
+      // email: "o@gmail.com",
+      // password: "Password@123",
       // address: "1234",
-      name: "Omkasd",
+      // name: "Omkasd",
     };
 
     dispatch(
