@@ -9,26 +9,18 @@ import { FetchAllProject } from "../redux/ProjectReducer";
 import { FetchAllTask } from "../redux/TaskReducer";
 import GridTask from "../components/Gridtask";
 import { Constants } from "../utils/Constants";
-import { AuthRedirect } from "../components/AuthRedirect";
+import { BsKanban, BsPeopleFill } from "react-icons/bs";
+import { GrTask } from "react-icons/gr";
 
 const Overview = () => {
-  const {
-    currentColor,
-    setIsSidebar,
-    isSidebar,
-    activeMenu,
-    setIsNavbar,
-    isNavbar,
-    setActiveMenu,
-  } = useStateContext();
+  const { currentColor } = useStateContext();
   const [user, setUser] = useState();
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // setIsSidebar(true);
-  // setIsNavbar(true);
-  // setActiveMenu(true);
+  let projects = useSelector((data) => data.Projects.projects);
+  let allTasks = useSelector((data) => data.AllTasks.tasks);
+  console.log(projects, allTasks);
 
   useEffect(() => {
     if (!localStorage.getItem(Constants.AUTH_TOKEN)) {
@@ -36,22 +28,12 @@ const Overview = () => {
       // console.log(user, "asf");
       navigate("/login");
     }
+
     setUser(JSON.parse(localStorage.getItem(Constants.USER_PROFILE)));
-    dispatch(
-      FetchAllProject({
-        // callback:()
-      })
-    );
-    dispatch(
-      FetchAllTask({
-        // callback:
-      })
-    );
+    dispatch(FetchAllProject({}));
+    dispatch(FetchAllTask({}));
   }, []);
 
-  let projects = useSelector((data) => data.Projects.projects);
-  let allTasks = useSelector((data) => data.AllTasks.tasks);
-  console.log(projects, allTasks);
   return (
     <div className="mt-12">
       <div className="flex flex-wrap justify-center">
@@ -67,27 +49,60 @@ const Overview = () => {
         </div>
 
         <div className="flex m-3 flex-wrap justify-center gap-6 items-center">
-          {earningData.map((item) => (
-            <div
-              key={item.title}
-              className="bg-white h-52 dark:text-gray-200 dark:bg-secondary-dark-bg md:w-60  p-4 pt-9 rounded-2xl "
+          <div className="bg-white h-52 dark:text-gray-200 dark:bg-secondary-dark-bg md:w-60  p-4 pt-9 rounded-2xl ">
+            <button
+              type="button"
+              style={{ backgroundColor: currentColor }}
+              className={`text-2xl opacity-0.9 rounded-full p-4 hover:drop-shadow-xl`}
             >
-              <button
-                type="button"
-                style={{ color: item.iconColor, backgroundColor: item.iconBg }}
-                className="text-2xl opacity-0.9 rounded-full  p-4 hover:drop-shadow-xl"
-              >
-                {item.icon}
-              </button>
-              <p className="mt-3">
-                <span className="text-lg font-semibold">{item.amount}</span>
-                <span className={`text-sm text-${item.pcColor} ml-2`}>
-                  {item.percentage}
-                </span>
-              </p>
-              <p className="text-sm text-gray-400  mt-1">{item.title}</p>
+              <BsKanban className=" text-stone-100" />
+            </button>
+            <p className="mt-3 text-lg font-semibold ml-3">
+              {projects ? projects.length : "0"}
+            </p>
+            <p className="text-sm text-gray-400 ml-3 mt-1">Total Projects</p>
+          </div>
+          <div className="bg-white h-52 dark:text-gray-200 dark:bg-secondary-dark-bg md:w-60  p-4 pt-9 rounded-2xl ">
+            <button
+              type="button"
+              style={{ backgroundColor: currentColor }}
+              className={`text-2xl opacity-0.9 rounded-full p-4 hover:drop-shadow-xl`}
+            >
+              <GrTask className=" text-white" />
+            </button>
+            <p className="mt-3 text-lg font-semibold ml-3">
+              {allTasks ? allTasks.length : "0"}
+            </p>
+            <p className="text-sm text-gray-400 ml-3  mt-1">Total Tasks</p>
+          </div>
+          <div className="bg-white h-52 dark:text-gray-200 dark:bg-secondary-dark-bg md:w-60  p-4 pt-9 rounded-2xl ">
+            <button
+              type="button"
+              style={{ backgroundColor: currentColor }}
+              className={`text-2xl opacity-0.9 rounded-full p-4 hover:drop-shadow-xl`}
+            >
+              <BsKanban className=" text-stone-100" />
+            </button>
+            <div className="mt-3 text-lg font-semibold ml-3">
+              {allTasks.map((item) => {
+                let count;
+                count += item.subtasks.length;
+              })}
+              11
             </div>
-          ))}
+            <p className="text-sm text-gray-400 ml-3 mt-1">Total SubTasks</p>
+          </div>
+          <div className="bg-white h-52 dark:text-gray-200 dark:bg-secondary-dark-bg md:w-60  p-4 pt-9 rounded-2xl ">
+            <button
+              type="button"
+              style={{ backgroundColor: currentColor }}
+              className={`text-2xl opacity-0.9 rounded-full p-4 hover:drop-shadow-xl`}
+            >
+              <BsPeopleFill className="" />
+            </button>
+            <p className="mt-3 text-lg font-semibold ml-3">9</p>
+            <p className="text-sm text-gray-400 ml-3 mt-1">Total Employees</p>
+          </div>
         </div>
         <div className="w-[70%] bg-white dark:text-gray-200  dark:bg-secondary-dark-bg rounded-xl p-8 pt-9 m-3 bg-hero-pattern bg-no-repeat bg-cover bg-center">
           <div className="flex justify-between items-center mb-5">
