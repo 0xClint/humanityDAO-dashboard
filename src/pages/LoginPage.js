@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { useStateContext } from "../contexts/ContextProvider";
 import { useDispatch } from "react-redux";
 import { Login } from "../redux/AuthReducer";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const LoginPage = () => {
   const { setIsSidebar, setIsNavbar, setActiveMenu } = useStateContext();
@@ -76,8 +75,15 @@ const LoginPage = () => {
             onChange={(e) => setPassword(e.target.value)}
             className="px-3 py-1.5 font-normal  text-gray-700 bg-white bg-clip-padding mb-2 border border-solid border-gray-300 rounded transition"
           />
+          <div className="min:h-6 text-blue-500">
+            New to DAO, get{" "}
+            <Link to={`/signup`} className="font-semibold">
+              SignUp
+            </Link>
+          </div>
         </div>
         <div className="min:h-6 text-red-700">{alert ? alert : ""}</div>
+
         {/* <Link to={`/overview`}> */}
         <button
           className="text-xl opacity-0.9 bg-[#5033ff] text-white hover:drop-shadow-xl rounded-md w-full p-3"
