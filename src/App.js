@@ -1,5 +1,5 @@
-import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import { FiSettings } from "react-icons/fi";
 import { TooltipComponent } from "@syncfusion/ej2-react-popups";
 import "./App.css";
@@ -7,18 +7,29 @@ import { Navbar, Sidebar, ThemeSettings } from "./components";
 import { Overview, Employees } from "./pages";
 import { useStateContext } from "./contexts/ContextProvider";
 import {
-  Login,
+  LoginPage,
   Projects,
   ProjectForm,
   Tasks,
   TaskCard,
   Todo,
   ProjectDetails,
+  SignUpPage,
 } from "./pages/index";
+import TaskForm from "./pages/TaskForm";
+import SubTaskForm from "./pages/SubTaskForm";
+import { Constants } from "./utils/Constants";
 
 function App() {
-  const { activeMenu, currentColor, themeSettings, setThemeSettings, isHome } =
-    useStateContext();
+  const {
+    activeMenu,
+    currentColor,
+    themeSettings,
+    setThemeSettings,
+    isHome,
+    isSidebar,
+    isNavbar,
+  } = useStateContext();
 
   return (
     <div className="App">
@@ -38,7 +49,7 @@ function App() {
           </div>
           {activeMenu ? (
             <div className="w-72 fixed sidebar dark:bg-secondary-dark-bg bg-white ">
-              <Sidebar />
+              {isSidebar && <Sidebar />}
             </div>
           ) : (
             <div className="w-0 dark:bg-secondary-dark-bg">Sidebar w-0</div>
@@ -49,25 +60,35 @@ function App() {
             }`}
           >
             <div className="fixed md:static bg-main-bg dark:bg-main-dark-bg navbar w-full ">
-              <Navbar />
+              {isNavbar && <Navbar />}
             </div>
             {themeSettings && <ThemeSettings />}
             <Routes>
-              <Route path="/" element={<Overview />} />
-              <Route path="/overview" element={<Overview />} />
+              <Route path="/:id" element={<Overview />} />
+              <Route path="" element={<Overview />} />
+              <Route path="/overview/:id" element={<Overview />} />
 
               {/* pages  */}
-              <Route path="/login" element={<Login />} />
+              {/* <Route
+                path="/redirect-page"
+                element={<Redirect to="/error-page" />}
+              /> */}
+              {/* {isAuth && <Navigate replace to="/login" />} */}
+
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/signup" element={<SignUpPage />} />
               <Route path="/projects" element={<Projects />} />
-              <Route
-                path="/dashboard/projects/form"
-                element={<ProjectForm />}
-              />
+              <Route path="/projects/form" element={<ProjectForm />} />
               <Route path="/employees" element={<Employees />} />
               <Route path="/tasks" element={<Tasks />} />
               <Route path="/tasks/:id" element={<TaskCard />} />
-              <Route path="/tasks/p/:id" element={<Todo />} />
+              <Route path="/tasks/subtasks/:id" element={<Todo />} />
               <Route path="projects/:id" element={<ProjectDetails />} />
+              <Route path="/tasks/form" element={<TaskForm />} />
+              <Route
+                path="/tasks/subtasks/form/:id"
+                element={<SubTaskForm />}
+              />
             </Routes>
           </div>
         </div>

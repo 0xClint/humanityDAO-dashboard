@@ -1,10 +1,23 @@
 import React, { useState } from "react";
 import Web3 from "web3";
+import { useDispatch } from "react-redux";
+import { useStateContext } from "../contexts/ContextProvider";
+import { SignUp } from "../redux/AuthReducer";
+import { toast } from "react-toastify";
 
-const Login = () => {
+const SignUpPage = () => {
+  const { setIsSidebar, setIsNavbar, setActiveMenu } = useStateContext();
   const [isConnected, setIsConnected] = useState(false);
   const [address, setAddress] = useState("");
-  const [balance, setBalance] = useState("");
+  const [name, setname] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const dispatch = useDispatch();
+
+  setIsSidebar(false);
+  setIsNavbar(false);
+  setActiveMenu(false);
 
   const detectCurrentProvider = () => {
     let provider;
@@ -32,15 +45,50 @@ const Login = () => {
         let ethBalance = await web3.eth.getBalance(account);
 
         await setAddress(account);
-        await setBalance(ethBalance);
+        // await setBalance(ethBalance);
         await setIsConnected(true);
-        console.log(address, balance);
+        // console.log(address);
       }
     } catch (error) {
       console.log(error);
     }
   };
 
+  const handleSubmit = () => {
+    console.log("signing Up");
+    const values = {
+      email: "omkar@gmail.com",
+      password: "Password@123",
+      address: "1234",
+      name: "Omkasd",
+    };
+
+    dispatch(
+      SignUp({
+        payload: values,
+        callback: (msg, data, recall) => {
+          if (msg === "error" || data.error) {
+            // setSubmitting(false);
+            toast.error(
+              typeof data === "string" ? data : "Something went wrong",
+              {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+              }
+            );
+            // show error message data.error or Something went wrong using toast
+          }
+          console.log(msg, data, recall);
+          recall();
+        },
+      })
+    );
+  };
   return (
     <div className="login h-full w-full overflow-hidden bg-[#F9FAFB] flex flex-col items-center justify-center">
       <div className="heading text-[2.3rem] font-bold">
@@ -50,7 +98,7 @@ const Login = () => {
         </span>
       </div>
       <p className="text-[2.5rem] font-extrabold mb-12 mt-2">
-        Sign in to your Account
+        Sign Up to your Account
       </p>
       <div className="loginCointainer bg-white w-[500px] rounded-md shadow-md px-14 py-12 flex flex-col items-center gap-8">
         <div className="question flex flex-col gap-2 w-full">
@@ -59,6 +107,7 @@ const Login = () => {
           </label>
           <input
             type="text"
+            onChange={(e) => setEmail(e.target.value)}
             className="px-3 py-1.5 font-normal  text-gray-700 bg-white bg-clip-padding border  border-solid border-gray-300 rounded transition"
           />
         </div>
@@ -68,6 +117,7 @@ const Login = () => {
           </label>
           <input
             type="text"
+            onChange={(e) => setPassword(e.target.value)}
             className="px-3 py-1.5 font-normal  text-gray-700 bg-white bg-clip-padding mb-2 border border-solid border-gray-300 rounded transition"
           />
         </div>
@@ -77,12 +127,15 @@ const Login = () => {
         >
           Connect Wallet
         </button>
-        <button className="text-xl opacity-0.9 bg-[#5033ff] text-white hover:drop-shadow-xl rounded-md w-full p-3">
-          Sign in
+        <button
+          className="text-xl opacity-0.9 bg-[#5033ff] text-white hover:drop-shadow-xl rounded-md w-full p-3"
+          onClick={handleSubmit}
+        >
+          Sign Up
         </button>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default SignUpPage;

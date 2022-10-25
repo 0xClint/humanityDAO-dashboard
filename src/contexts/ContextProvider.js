@@ -17,6 +17,8 @@ export const ContextProvider = ({ children }) => {
   const [activeMenu, setActiveMenu] = useState(true);
   const [isClicked, setIsClicked] = useState(initialState);
   const [isHome, setIsHome] = useState(true);
+  const [isSidebar, setIsSidebar] = useState(true);
+  const [isNavbar, setIsNavbar] = useState(true);
 
   const setMode = (e) => {
     setCurrentMode(e.target.value);
@@ -50,6 +52,10 @@ export const ContextProvider = ({ children }) => {
         setColor,
         themeSettings,
         setThemeSettings,
+        isSidebar,
+        setIsSidebar,
+        isNavbar,
+        setIsNavbar,
       }}
     >
       {children}

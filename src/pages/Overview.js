@@ -1,21 +1,62 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { earningData, pieChartData } from "../assets/dummy";
 import { useStateContext } from "../contexts/ContextProvider";
 import Doughnut from "../components/Charts/Pie";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Grid from "../components/Grid";
-import Projects from "./Projects";
+import { useDispatch, useSelector } from "react-redux";
+import { FetchAllProject } from "../redux/ProjectReducer";
+import { FetchAllTask } from "../redux/TaskReducer";
+import GridTask from "../components/Gridtask";
+import { Constants } from "../utils/Constants";
+import { AuthRedirect } from "../components/AuthRedirect";
 
 const Overview = () => {
-  const { currentColor } = useStateContext();
+  const {
+    currentColor,
+    setIsSidebar,
+    isSidebar,
+    activeMenu,
+    setIsNavbar,
+    isNavbar,
+    setActiveMenu,
+  } = useStateContext();
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  // setIsSidebar(true);
+  // setIsNavbar(true);
+  // setActiveMenu(true);
+
+  useEffect(() => {
+    if (!localStorage.getItem(Constants.AUTH_TOKEN)) {
+      console.log(localStorage.getItem(Constants.AUTH_TOKEN), "add");
+      navigate("/login");
+    }
+    dispatch(
+      FetchAllProject({
+        // callback:()
+      })
+    );
+    dispatch(
+      FetchAllTask({
+        // callback:
+      })
+    );
+  }, []);
+
+  let projects = useSelector((data) => data.Projects.projects);
+  let allTasks = useSelector((data) => data.AllTasks.tasks);
+  console.log(projects, allTasks);
   return (
     <div className="mt-12">
       <div className="flex flex-wrap justify-center">
-        <div className="w-[90%] bg-white dark:text-gray-200  dark:bg-secondary-dark-bg h-44 rounded-xl p-8 pt-9 m-3 bg-hero-pattern bg-no-repeat bg-cover bg-center">
+        <div className="w-[90%] bg-white dark:text-gray-200  dark:bg-secondary-dark-bg h-24 rounded-xl p-8 pt-9 m-3 bg-hero-pattern bg-no-repeat bg-cover bg-center">
           <div className="flex justify-between items-center">
             <div>
-              <p className="font-bold text-gray-400">Earnings</p>
-              <p className="text-2xl">$63,448.78</p>
+              {/* <p className="font-bold text-gray-400">Earnings</p> */}
+              <p className="text-2xl font-bold">Welcome To Humanity DAO</p>
             </div>
           </div>
         </div>
@@ -55,7 +96,7 @@ const Overview = () => {
               </button>
             </Link>
           </div>
-          <Grid />
+          <Grid data={projects} />
         </div>
         <div className="w-[70%] bg-white dark:text-gray-200  dark:bg-secondary-dark-bg rounded-xl p-8 pt-9 m-3 bg-hero-pattern bg-no-repeat bg-cover bg-center">
           <div className="flex justify-between items-center mb-5">
@@ -69,7 +110,7 @@ const Overview = () => {
               </button>
             </Link>
           </div>
-          <Grid />
+          <GridTask data={allTasks} />
         </div>
       </div>
 

@@ -10,7 +10,7 @@ import {
   Sort,
 } from "@syncfusion/ej2-react-grids";
 
-const Grid = ({ data }) => {
+const GridTask = ({ data }) => {
   console.log(data);
   const pageSettings = { pageSize: 6 };
   return (
@@ -23,14 +23,6 @@ const Grid = ({ data }) => {
         <ColumnsDirective>
           <ColumnDirective field="title" width="100" textAlign="Center" />
           <ColumnDirective field="addedOn" width="100" textAlign="Center" />
-          {/* <ColumnDirective field="AddedBy" width="100" textAlign="Center" /> */}
-          {/* <ColumnDirective
-            field="Freight"
-            width="100"
-            format="C2"
-            textAlign="Right"
-          />
-          <ColumnDirective field="ShipCountry" width="100" /> */}
         </ColumnsDirective>
         <Inject services={[Page, Sort, Filter, Group]} />
       </GridComponent>
@@ -38,4 +30,4 @@ const Grid = ({ data }) => {
   );
 };
 
-export default Grid;
+export default GridTask;

@@ -8,4 +8,5 @@ export { default as Projects } from "./Projects";
 export { default as TaskCard } from "./TaskCard";
 export { default as Tasks } from "./Tasks";
 export { default as Todo } from "./Todo";
-export { default as Login } from "./Login";
+export { default as LoginPage } from "./LoginPage";
+export { default as SignUpPage } from "./SignUpPage";

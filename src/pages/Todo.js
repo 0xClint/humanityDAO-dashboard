@@ -1,6 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { FetchSubTask } from "../redux/SubTaskReducer";
+import { useParams } from "react-router-dom";
 
 const Todo = () => {
+  const dispatch = useDispatch();
+  const params = useParams();
+  console.log(params.id);
+
+  useEffect(() => {
+    console.log("Hello");
+    dispatch(FetchSubTask({ query: params.id }));
+  }, []);
+
+  let subTaskDetails = useSelector((data) => data.SubTask.subtask);
+
   return (
     <div>
       <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
@@ -16,21 +30,31 @@ const Todo = () => {
             type="checkbox"
             value=""
           />
-          <label className="text-3xl font-bold">To-Do 1</label>
+          <label className="text-3xl font-bold">
+            {subTaskDetails ? subTaskDetails.title : ""}
+          </label>
         </div>
         <div className="details text-lg my-14 gap-5 flex flex-col font-medium">
-          <p>Project :</p>
-          <p>Assignees :</p>
-          <p>Due On :</p>
+          <p>
+            Project : {subTaskDetails ? subTaskDetails.projectid.title : "s"}
+          </p>
+          <div className="flex">
+            <p className=" mr-2">Assignees :</p>
+            {subTaskDetails
+              ? subTaskDetails.assignedto.map((item) => (
+                  <div className=" bg-yellow-300 p-[1px] px-2 rounded-2xl text-white">
+                    {item.name}
+                  </div>
+                ))
+              : "s"}
+          </div>
+          <p>Due On : {subTaskDetails ? subTaskDetails.dueOn : "s"}</p>
           <p>TimeLine :</p>
         </div>
         <div className="description">
           <h3 className="text-2xl font-semibold">Description :</h3>
           <p className="my-3 mr-10">
-            do consequat. Duis aute irure dolor in reprehenderit in voluptate
-            velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-            occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-            mollit anim id est laborum.
+            {subTaskDetails ? subTaskDetails.description : "s"}
           </p>
         </div>
         <div className="commentSection my-32">
