@@ -98,7 +98,28 @@ const TaskSlice = createSlice({
   initialState: {
     tasks: [],
   },
-  reducers: {},
+  reducers: {
+    UpdateSubTaskInCache(state,action){
+      const data = action.payload;
+      if(action.payload){
+        const taskid = data.taskid;
+        const subtaskid = data._id;
+        state.tasks.forEach(function(task){
+          if(task._id === taskid){
+            task.subtasks.forEach(function(subtask){
+              if(subtask._id === subtaskid){
+                subtask.isComplete = data.isComplete;
+                subtask.title = data.title;
+                subtask.description = data.description;
+                subtask.assignedto = data.assignedto;
+                subtask.dueOn = data.dueOn;
+              }
+            })
+          }
+        })
+      }
+    }
+  },
   extraReducers: {
     [FetchAllTask.fulfilled]: (state, action) => {
       // console.log(action.payload);
@@ -109,5 +130,7 @@ const TaskSlice = createSlice({
     },
   },
 });
+
+export const {UpdateSubTaskInCache} = TaskSlice.actions;
 
 export default TaskSlice.reducer;

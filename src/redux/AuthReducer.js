@@ -84,7 +84,7 @@ const AuthSlice = createSlice({
       if (action.payload) {
         const data = action.payload;
         console.log(data.resp.data.user);
-        state.isadmin = data.resp.data.user.isSuperUser;
+        state.isadmin = data.user.isSuperUser;
         // localStorage.setItem(
         //   Constants.,
         //   JSON.stringify(data.resp.data.token)

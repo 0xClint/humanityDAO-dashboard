@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate as Redirect } from "react-router-dom";
+
 import { FiSettings } from "react-icons/fi";
 import { TooltipComponent } from "@syncfusion/ej2-react-popups";
 import "./App.css";
@@ -23,6 +24,7 @@ import { Constants } from "./utils/Constants";
 import { UserMe } from "./redux/AuthReducer";
 
 function App() {
+  
   const {
     activeMenu,
     currentColor,
@@ -35,18 +37,21 @@ function App() {
     setIsAdmin,
   } = useStateContext();
   const dispatch = useDispatch();
-
+  const isAuthenticated = Boolean(localStorage.getItem(Constants.AUTH_TOKEN))
   useEffect(() => {
     dispatch(
       UserMe({
         callback: async (msg, data, recall) => {
           // window.location.reload();
-          setIsAdmin(JSON.parse(localStorage.getItem("Admin")));
+          console.log(data);
+          setIsAdmin(data?.data?.user?.isSuperUser);
+          // console.log(data?.data?.user)
+          recall();
         },
       })
     );
-    console.log(isAdmin);
-  }, [isAdmin]);
+    // console.log(isAdmin);
+  }, []);
 
   return (
     <div className="App">
@@ -82,8 +87,8 @@ function App() {
             {themeSettings && <ThemeSettings />}
             <Routes>
               {/* <Route path="/:id" element={<Overview />} /> */}
-              <Route exact path="/" element={<Overview />} />
-              <Route path="/overview" element={<Overview />} />
+              <Route exact path="/" element={!isAuthenticated?<Redirect to="/login"/>:<Overview />} />
+              <Route path="/overview" element={!isAuthenticated?<Redirect to="/login"/>:<Overview />} />
 
               {/* pages  */}
               {/* <Route
@@ -92,21 +97,21 @@ function App() {
               /> */}
               {/* {isAuth && <Navigate replace to="/login" />} */}
 
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/signup" element={<SignUpPage />} />
-              <Route path="/projects" element={<Projects />} />
-              <Route path="/projects/add" element={<ProjectForm />} />
-              <Route path="/projects/edit/:id" element={<ProjectForm />} />
-              <Route path="/employees" element={<Employees />} />
-              <Route path="/tasks" element={<Tasks />} />
-              <Route path="/tasks/:id" element={<TaskCard />} />
-              <Route path="/tasks/subtasks/:id" element={<Todo />} />
-              <Route path="projects/:id" element={<ProjectDetails />} />
-              <Route path="/tasks/add" element={<TaskForm />} />
-              <Route path="/tasks/edit/:id" element={<TaskForm />} />
+              <Route path="/login" element={isAuthenticated?<Redirect to="/"/>:<LoginPage />} />
+              <Route path="/signup" element={isAuthenticated?<Redirect to="/"/>:<SignUpPage />} />
+              <Route path="/projects" element={!isAuthenticated?<Redirect to="/login"/>:<Projects />} />
+              <Route path="/projects/add" element={!isAuthenticated?<Redirect to="/login"/>:<ProjectForm />} />
+              <Route path="/projects/edit/:id" element={!isAuthenticated?<Redirect to="/login"/>:<ProjectForm />} />
+              <Route path="/employees" element={!isAuthenticated?<Redirect to="/login"/>:<Employees />} />
+              <Route path="/tasks" element={!isAuthenticated?<Redirect to="/login"/>:<Tasks />} />
+              <Route path="/tasks/:id" element={!isAuthenticated?<Redirect to="/login"/>:<TaskCard />} />
+              <Route path="/tasks/subtasks/:id" element={!isAuthenticated?<Redirect to="/login"/>:<Todo />} />
+              <Route path="projects/:id" element={!isAuthenticated?<Redirect to="/login"/>:<ProjectDetails />} />
+              <Route path="/tasks/add" element={!isAuthenticated?<Redirect to="/login"/>:<TaskForm />} />
+              <Route path="/tasks/edit/:id" element={!isAuthenticated?<Redirect to="/login"/>:<TaskForm />} />
               <Route
                 path="/tasks/subtasks/form/:id"
-                element={<SubTaskForm />}
+                element={!isAuthenticated?<Redirect to="/login"/>:<SubTaskForm />}
               />
             </Routes>
           </div>

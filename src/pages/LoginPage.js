@@ -3,6 +3,7 @@ import { useStateContext } from "../contexts/ContextProvider";
 import { useDispatch } from "react-redux";
 import { Login, UserMe } from "../redux/AuthReducer";
 import { useNavigate, Link } from "react-router-dom";
+import { Constants } from "../utils/Constants";
 
 const LoginPage = () => {
   const { setIsSidebar, setIsNavbar, setActiveMenu } = useStateContext();
@@ -17,6 +18,11 @@ const LoginPage = () => {
     setIsNavbar(false);
     setActiveMenu(false);
   }, []);
+  React.useEffect(()=>{
+    if(localStorage.getItem(Constants.AUTH_TOKEN)){
+      navigation('/');
+    }
+  },[])
 
   const handleClick = async () => {
     const values = {
@@ -74,7 +80,7 @@ const LoginPage = () => {
             Password
           </label>
           <input
-            type="text"
+            type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="px-3 py-1.5 font-normal  text-gray-700 bg-white bg-clip-padding mb-2 border border-solid border-gray-300 rounded transition"

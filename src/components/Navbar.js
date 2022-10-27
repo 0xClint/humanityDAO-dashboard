@@ -38,9 +38,9 @@ const Navbar = () => {
     screenSize,
   } = useStateContext();
   const [user, setUser] = useState();
-
+  const handleResize = () => setScreenSize(window.innerWidth);
   useEffect(() => {
-    const handleResize = () => setScreenSize(window.innerWidth);
+    
     setUser(JSON.parse(localStorage.getItem(Constants.USER_PROFILE)));
 
     window.addEventListener("resize", handleResize);

@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { EditSubTask } from "../redux/SubTaskReducer";
-import { DeleteTask, FetchAllTask } from "../redux/TaskReducer";
+import { DeleteTask, FetchAllTask, UpdateSubTaskInCache } from "../redux/TaskReducer";
 import TaskPieChart from "../components/Charts/TaskPieChart";
 import { GetCommentTask } from "../redux/CommentReducer";
 
@@ -20,32 +20,41 @@ const TaskCard = () => {
   //   window.scrollTo({ top: 0, left: 0 });
   // }, []);
 
-  const handleCheck = async (subtask) => {
+  const handleCheck = async (subtask,taskid) => {
     const values = {
       data: {
         title: subtask.title,
+        _id:subtask._id,
         description: subtask.description,
         dueOn: subtask.dueOn,
         assignedto: subtask.assignedto,
         isComplete: !subtask.isComplete,
       },
     };
-
-    await dispatch(
+    dispatch(UpdateSubTaskInCache({...values.data,taskid}
+      ))
+    dispatch(
       EditSubTask({
         payload: values,
         query: subtask._id,
         callback: async (msg, data, recall) => {
-          await console.log(msg, recall, data);
+          if(msg === "error"){
+            dispatch(UpdateSubTaskInCache({...values.data,taskid}
+              ))
+          }
+          recall();
         },
       })
     );
   };
   const allTasks = useSelector((data) => data.AllTasks.tasks);
   const allComments = useSelector((data) => data.Comments.comments);
-
-  let TaskDetails = allTasks.filter((item) => item._id == params.id);
+  const [TaskDetails,setTaskDetails] = useState(allTasks.filter((item) => item._id == params.id));
+  
   // console.log(allComments);
+  useEffect(()=>{
+    setTaskDetails(allTasks.filter((item) => item._id == params.id));
+  },[allTasks])
 
   const handleDelete = (id) => {
     console.log(id);
@@ -156,7 +165,7 @@ const TaskCard = () => {
                         type="checkbox"
                         value=""
                         checked={item.isComplete}
-                        onChange={() => handleCheck(item)}
+                        onChange={() => handleCheck(item,TaskDetails[0]._id)}
                       />
                       <label className="text-xl">{item.title}</label>
                     </div>
