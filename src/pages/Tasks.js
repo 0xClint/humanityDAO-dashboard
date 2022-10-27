@@ -11,7 +11,7 @@ const Tasks = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleCheck = async (subtask) => {
+  const handleCheck = async (subtask,taskid) => {
     const values = {
       data: {
         title: subtask.title,
