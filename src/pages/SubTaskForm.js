@@ -1,19 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useStateContext } from "../contexts/ContextProvider";
 import { AddSubTask } from "../redux/SubTaskReducer";
 import { useParams } from "react-router-dom";
+import { LeaderBoard } from "../redux/EmployeeReducer";
 
 const SubTaskForm = () => {
   const { currentColor } = useStateContext();
   const [title, setTitle] = useState("");
   const params = useParams();
   const [description, setDescription] = useState("");
-  const [assignedto, setAssignedto] = useState("aa");
+  const [assignee, setAssignee] = useState();
   const [dueDate, setDueDate] = useState();
   const dispatch = useDispatch();
   console.log(params.id);
+
+  useEffect(() => {
+    dispatch(LeaderBoard({ callback: (msg, data, recall) => {} }));
+  }, []);
 
   const handleClick = () => {
     const values = {
@@ -21,7 +26,7 @@ const SubTaskForm = () => {
         title,
         description,
         dueOn: dueDate,
-        assignedto: "63515c79fbc67a82f6fa89c0",
+        assignedto: [assignee],
       },
     };
 
@@ -36,6 +41,7 @@ const SubTaskForm = () => {
     );
   };
   console.log(dueDate);
+  let employeesList = useSelector((data) => data.EmployeesList.list);
 
   return (
     <div>
@@ -57,14 +63,24 @@ const SubTaskForm = () => {
           />
         </div>
         <div className="question flex flex-col gap-2 w-[60%] my-8">
-          <label htmlFor="">Assigned To</label>
-          <input
-            type="text"
-            // value={title}
-            // onChange={(e) => setTitle(e.target.value)}
-            className="
-      block px-3 py-1.5 font-normal  text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition"
-          />
+          <label htmlFor="">Assignee</label>
+          <select
+            className="question flex flex-col gap-2 w-[60%] h-[32] border-2 rounded-sm border-zinc-500 my-2"
+            value={assignee}
+            onChange={(e) => {
+              setAssignee(e.target.value);
+            }}
+            required
+          >
+            <option value="none" selected>
+              Select an Option
+            </option>
+            {employeesList
+              ? employeesList.map((item) => {
+                  return <option value={item._id}>{item.name}</option>;
+                })
+              : ""}
+          </select>
         </div>
         <div className="question flex flex-col gap-2 w-[60%] my-8">
           <label htmlFor="">Due On</label>
@@ -74,31 +90,8 @@ const SubTaskForm = () => {
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
           />
-          {/* <input
-            type="text"
-            className="
-      block px-3 py-1.5 font-normal  text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition"
-          /> */}
         </div>
-        {/* <div className="question flex flex-col gap-2 w-[60%] my-8">
-          <label htmlFor="">Select Project</label>
-          <select
-            className="question flex flex-col gap-2 w-[60%] h-[32] border-2 rounded-sm border-zinc-500 my-2"
-            value={project}
-            onChange={(e) => {
-              setProject(e.target.value);
-            }}
-            // className="input_field"
-            required
-          >
-            <option value="none" selected>
-              Select an Option
-            </option>
-            {projects.map((item) => {
-              return <option value={item._id}>{item.title}</option>;
-            })}
-          </select>
-        </div> */}
+
         <div className="question flex flex-col gap-2 w-[60%] my-8">
           <label htmlFor="">Description</label>
           <input

@@ -33,6 +33,26 @@ export const AddSubTask = createAsyncThunk(
   }
 );
 
+// export const TotalSubTaskCount = createAsyncThunk(
+//   "subtaskCount",
+//   async ({ taskList, callback }) => {
+//     let count = 0;
+//     const data = taskList;
+//     console.log(taskList);
+//     data.map((item) => {
+//       if (item.subtasks) {
+//         count += item.subtasks.length;
+//       }
+//     });
+
+//     // callback("success", data.resp, () => {});
+
+//     console.log(count);
+//     callback("countsuccess", count, () => {});
+//     return { count };
+//   }
+// );
+
 export const EditSubTask = createAsyncThunk(
   "dashboard/subtask/:subtaskid",
   async ({ payload, callback, query }) => {
@@ -56,6 +76,7 @@ const SubTaskSlice = createSlice({
   name: "SubTasks",
   initialState: {
     subTasks: [],
+    subTasksCount: null,
   },
   reducers: {
     // setData(state, action) {
@@ -76,6 +97,13 @@ const SubTaskSlice = createSlice({
       if (action.payload) {
         const data = action.payload;
         state.subtask = data;
+      }
+    },
+    [EditSubTask.fulfilled]: (state, action) => {
+      console.log(action.payload);
+      if (action.payload.data) {
+        const data = action.payload.data;
+        state.subTasks = data;
       }
     },
   },

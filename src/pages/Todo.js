@@ -14,6 +14,7 @@ const Todo = () => {
   }, []);
 
   let subTaskDetails = useSelector((data) => data.SubTask.subtask);
+  console.log(subTaskDetails);
 
   return (
     <div>
@@ -25,19 +26,20 @@ const Todo = () => {
       </div>
       <div className="mainContainer m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl mx-4">
         <div className="task flex gap-7 items-center my-5">
-          <input
+          {/* <input
             className="h-10 w-10 border border-gray-300 transition duration-200"
             type="checkbox"
             value=""
-          />
+          /> */}
           <label className="text-3xl font-bold">
             {subTaskDetails ? subTaskDetails.title : ""}
           </label>
         </div>
         <div className="details text-lg my-14 gap-5 flex flex-col font-medium">
-          <p>
-            Project : {subTaskDetails ? subTaskDetails.projectid.title : "s"}
-          </p>
+          {/* <p>
+            Project :
+            {subTaskDetails ? subTaskDetails.projectid.title : "wdwdvdwdv"}
+          </p> */}
           <div className="flex">
             <p className=" mr-2">Assignees :</p>
             {subTaskDetails
@@ -49,7 +51,7 @@ const Todo = () => {
               : "s"}
           </div>
           <p>Due On : {subTaskDetails ? subTaskDetails.dueOn : "s"}</p>
-          <p>TimeLine :</p>
+          {/* <p>TimeLine :</p> */}
         </div>
         <div className="description">
           <h3 className="text-2xl font-semibold">Description :</h3>

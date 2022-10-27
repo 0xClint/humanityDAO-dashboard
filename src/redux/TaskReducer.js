@@ -17,6 +17,26 @@ export const FetchAllTask = createAsyncThunk(
     return data.resp.data;
   }
 );
+export const FetchTask = createAsyncThunk(
+  "dashboard/tasks/all",
+  async ({ query, callback }) => {
+    const data = await MakeRequest(Api.GET, {
+      type: Type.DASH,
+      url: Routes.GET_A_TASK.replace(":taskid", query),
+    });
+    if (data.err) {
+      return null;
+    }
+    // let taskdetail ={
+    //   title:
+    // }
+    // console.log(data.resp.data.title, data.resp.data.description);
+    callback("success", data.resp, () => {});
+    // localStorage.setItem("EDIT TASK TITLE", data.resp.data);
+    localStorage.setItem("EDIT TASK TITLE", JSON.stringify(data.resp.data));
+    return data.resp.data;
+  }
+);
 
 export const AddTask = createAsyncThunk(
   "project/",
@@ -35,26 +55,50 @@ export const AddTask = createAsyncThunk(
     return { ...data.resp.data, ...payload };
   }
 );
+export const EditTask = createAsyncThunk(
+  "project/",
+  async ({ payload, callback, query }) => {
+    console.log(query);
+    const data = await MakeRequest(Api.PUT, {
+      type: Type.DASH,
+      url: Routes.EDIT_TASK.replace(":taskid", query),
+      body: payload,
+    });
+
+    if (data.err) {
+      callback("error", data.err, () => {});
+      return null;
+    }
+    callback("success", data.resp, () => {});
+    return { ...data.resp.data, ...payload };
+  }
+);
+
+export const DeleteTask = createAsyncThunk(
+  "project/edit",
+  async ({ payload, callback, query }) => {
+    const data = await MakeRequest(Api.DELETE, {
+      type: Type.DASH,
+      url: Routes.DELETE_TASK.replace(":taskid", query),
+      body: payload,
+    });
+    console.log(data);
+
+    if (data.err) {
+      callback("error", data.err, () => {});
+      return null;
+    }
+    callback("success", data.resp, () => {});
+    return { ...data.resp.data, ...payload };
+  }
+);
 
 const TaskSlice = createSlice({
   name: "AllTasks",
   initialState: {
     tasks: [],
-    // Atask: null,
   },
-  reducers: {
-    // setData(state, action) {
-    //   const { user, token } = action.payload;
-    //   if (user) {
-    //     state.user = user;
-    //     localStorage.setItem(Constants.UserProfile, JSON.stringify(user));
-    //   }
-    //   if (token) {
-    //     state.token = token;
-    //     localStorage.setItem(Constants.AuthToken, token);
-    //   }
-    // },
-  },
+  reducers: {},
   extraReducers: {
     [FetchAllTask.fulfilled]: (state, action) => {
       // console.log(action.payload);
@@ -63,16 +107,7 @@ const TaskSlice = createSlice({
         state.tasks = data;
       }
     },
-    // [FetchTask.fulfilled]: (state, action) => {
-    //   // console.log(action.payload);
-    //   if (action.payload) {
-    //     const data = action.payload;
-    //     state.Atask = data;
-    //   }
-    // },
   },
 });
-
-// export const { setData } = PoleSlice.actions;
 
 export default TaskSlice.reducer;

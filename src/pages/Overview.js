@@ -11,6 +11,8 @@ import GridTask from "../components/Gridtask";
 import { Constants } from "../utils/Constants";
 import { BsKanban, BsPeopleFill } from "react-icons/bs";
 import { GrTask } from "react-icons/gr";
+import { totalSubTaskCount } from "../contexts/subTaskCount";
+import { LeaderBoard } from "../redux/EmployeeReducer";
 
 const Overview = () => {
   const { currentColor } = useStateContext();
@@ -18,22 +20,30 @@ const Overview = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  let projects = useSelector((data) => data.Projects.projects);
-  let allTasks = useSelector((data) => data.AllTasks.tasks);
-  console.log(projects, allTasks);
-
   useEffect(() => {
     if (!localStorage.getItem(Constants.AUTH_TOKEN)) {
       console.log(localStorage.getItem(Constants.AUTH_TOKEN));
-      // console.log(user, "asf");
       navigate("/login");
     }
 
     setUser(JSON.parse(localStorage.getItem(Constants.USER_PROFILE)));
     dispatch(FetchAllProject({}));
     dispatch(FetchAllTask({}));
+    dispatch(
+      LeaderBoard({
+        callback: async (msg, data, recall) => {
+          // await console.log(msg, recall, data);
+        },
+      })
+    );
   }, []);
 
+  let projects = useSelector((data) => data.Projects.projects);
+  let allTasks = useSelector((data) => data.AllTasks.tasks);
+  let employees = useSelector((data) => data.EmployeesList.list);
+  let subTaskCount = totalSubTaskCount(allTasks);
+  // console.log(projects, allTasks);
+  console.log(employees);
   return (
     <div className="mt-12">
       <div className="flex flex-wrap justify-center">
@@ -42,7 +52,7 @@ const Overview = () => {
             <div>
               {/* <p className="font-bold text-gray-400">Earnings</p> */}
               <p className="text-2xl font-bold">
-                Hi {user},Welcome To Humanity DAO
+                Hi {user}, Welcome To Humanity DAO
               </p>
             </div>
           </div>
@@ -84,11 +94,7 @@ const Overview = () => {
               <BsKanban className=" text-stone-100" />
             </button>
             <div className="mt-3 text-lg font-semibold ml-3">
-              {allTasks.map((item) => {
-                let count;
-                count += item.subtasks.length;
-              })}
-              11
+              {subTaskCount}
             </div>
             <p className="text-sm text-gray-400 ml-3 mt-1">Total SubTasks</p>
           </div>
@@ -100,7 +106,9 @@ const Overview = () => {
             >
               <BsPeopleFill className="" />
             </button>
-            <p className="mt-3 text-lg font-semibold ml-3">9</p>
+            <p className="mt-3 text-lg font-semibold ml-3">
+              {employees.length}
+            </p>
             <p className="text-sm text-gray-400 ml-3 mt-1">Total Employees</p>
           </div>
         </div>

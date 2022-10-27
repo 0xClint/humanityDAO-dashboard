@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useStateContext } from "../contexts/ContextProvider";
 import { useDispatch } from "react-redux";
-import { Login } from "../redux/AuthReducer";
+import { Login, UserMe } from "../redux/AuthReducer";
 import { useNavigate, Link } from "react-router-dom";
 
 const LoginPage = () => {
@@ -12,17 +12,19 @@ const LoginPage = () => {
   const dispatch = useDispatch();
   const navigation = useNavigate();
 
-  setIsSidebar(false);
-  setIsNavbar(false);
-  setActiveMenu(false);
+  useEffect(() => {
+    setIsSidebar(false);
+    setIsNavbar(false);
+    setActiveMenu(false);
+  }, []);
 
   const handleClick = async () => {
     const values = {
       email,
       password,
     };
-    dispatch(
-      await Login({
+    await dispatch(
+      Login({
         payload: values,
         callback: async (msg, data, recall) => {
           console.log(msg, recall, data.data);
@@ -31,11 +33,13 @@ const LoginPage = () => {
           } else {
             console.log(data);
             recall();
-            setIsSidebar(true);
-            setIsNavbar(true);
-            setActiveMenu(true);
-            navigation(`/overview/`);
+
+            await setIsSidebar(true);
+            await setIsNavbar(true);
+            await setActiveMenu(true);
+            // navigation("/");
             window.location.reload();
+            // console.log("redirect");
           }
         },
       })

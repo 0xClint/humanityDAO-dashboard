@@ -1,13 +1,44 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useStateContext } from "../contexts/ContextProvider";
-import { useDispatch } from "react-redux";
-import { AddProject } from "../redux/ProjectReducer";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  AddProject,
+  EditProject,
+  FetchAllProject,
+  FetchProject,
+} from "../redux/ProjectReducer";
+import { Link, useParams } from "react-router-dom";
+import { LeaderBoard } from "../redux/EmployeeReducer";
 
 const ProjectForm = () => {
   const { currentColor } = useStateContext();
   const [projectName, setProjectName] = useState();
+  const [assignee, setAssignee] = useState();
   const dispatch = useDispatch();
+  const params = useParams();
+  // const projectDetail = useSelector((data) => data.Projects.project);
+
+  useEffect(() => {
+    console.log("hii");
+    // setProjectName(projectDetail ? projectDetail.title : "sds");
+
+    dispatch(
+      LeaderBoard({
+        callback: (msg, data, recall) => {},
+      })
+    );
+    dispatch(
+      FetchProject({
+        query: params.id,
+        callback: async ({ data }) => {
+          await console.log(data);
+          setProjectName(
+            JSON.parse(localStorage.getItem("EDIT PROJECT TITLE"))
+          );
+        },
+      })
+    );
+  }, []);
 
   const handleClick = () => {
     console.log("hello");
@@ -15,7 +46,7 @@ const ProjectForm = () => {
     const values = {
       data: {
         title: projectName,
-        members: [],
+        members: [assignee],
       },
     };
 
@@ -28,6 +59,8 @@ const ProjectForm = () => {
       })
     );
   };
+  let employeesList = useSelector((data) => data.EmployeesList.list);
+  // let employeesList = useSelector((data) => data.EmployeesList.list);
   return (
     <div>
       <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
@@ -44,16 +77,28 @@ const ProjectForm = () => {
             value={projectName}
             onChange={(e) => setProjectName(e.target.value)}
             className="
-          block px-3 py-1.5 font-normal  text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition"
+            block px-3 py-1.5 font-normal  text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition"
           />
         </div>
         <div className="question flex flex-col gap-2 w-[60%] my-8">
           <label htmlFor="">Assignee</label>
-          <input
-            type="text"
-            className="
-          block px-3 py-1.5 font-normal  text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition"
-          />
+          <select
+            className="question flex flex-col gap-2 w-[60%] h-[32] border-2 rounded-sm border-zinc-500 my-2"
+            value={assignee}
+            onChange={(e) => {
+              setAssignee(e.target.value);
+            }}
+            required
+          >
+            <option value="none" selected>
+              Select an Option
+            </option>
+            {employeesList
+              ? employeesList.map((item) => {
+                  return <option value={item._id}>{item.name}</option>;
+                })
+              : ""}
+          </select>
         </div>
         <Link to={`/projects`}>
           <button

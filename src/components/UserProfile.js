@@ -2,20 +2,31 @@ import React, { useEffect, useState } from "react";
 import { MdOutlineCancel } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from ".";
-import { userProfileData } from "../assets/dummy";
+import { useDispatch, useSelector } from "react-redux";
 import { useStateContext } from "../contexts/ContextProvider";
-import avatar from "../assets/avatar.jpg";
 import { Constants } from "../utils/Constants";
+import { LogOut } from "../redux/AuthReducer";
 
 const UserProfile = () => {
-  const { currentColor } = useStateContext();
+  const { currentColor, isAdmin } = useStateContext();
   const [user, setUser] = useState();
+  const dispatch = useDispatch();
+  const navigation = useNavigate();
 
   useEffect(() => {
     setUser(JSON.parse(localStorage.getItem(Constants.USER_PROFILE)));
+    // console.log(isAdmin, "hii");
   });
 
-  const handleLogout = () => {};
+  const handleLogout = async () => {
+    console.log("logout button");
+    await dispatch(
+      LogOut({
+        callback: async (msg) => console.log(msg),
+      })
+    );
+    navigation(`/login`);
+  };
 
   return (
     <div className="nav-item absolute right-1 top-16 bg-white dark:bg-[#42464D] p-8 rounded-lg w-96">
@@ -32,6 +43,9 @@ const UserProfile = () => {
       <div className="flex gap-5 items-center mt-6 border-color border-b-1 pb-6">
         <div>
           <p className="font-semibold text-xl dark:text-gray-200"> {user} </p>
+          <p className="text-gray-500 text-sm dark:text-gray-400 ">
+            Admin : {isAdmin ? "true" : "false"}
+          </p>
         </div>
       </div>
       <div>
@@ -61,15 +75,15 @@ const UserProfile = () => {
         </div>
       </div>
       <div className="mt-5">
-        <Link to="/login">
-          <button
-            onClick={handleLogout()}
-            style={{ backgroundColor: currentColor }}
-            className="text-xl opacity-0.9 text-white hover:drop-shadow-xl rounded-md  p-3"
-          >
-            Logout
-          </button>
-        </Link>
+        {/* <Link to="/login"> */}
+        <button
+          onClick={() => handleLogout()}
+          style={{ backgroundColor: currentColor }}
+          className="text-xl opacity-0.9 text-white hover:drop-shadow-xl rounded-md  p-3"
+        >
+          Logout
+        </button>
+        {/* </Link> */}
       </div>
     </div>
   );

@@ -17,8 +17,10 @@ import {
   SignUpPage,
 } from "./pages/index";
 import TaskForm from "./pages/TaskForm";
+import { useSelector, useDispatch } from "react-redux";
 import SubTaskForm from "./pages/SubTaskForm";
 import { Constants } from "./utils/Constants";
+import { UserMe } from "./redux/AuthReducer";
 
 function App() {
   const {
@@ -29,7 +31,22 @@ function App() {
     isHome,
     isSidebar,
     isNavbar,
+    isAdmin,
+    setIsAdmin,
   } = useStateContext();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(
+      UserMe({
+        callback: async (msg, data, recall) => {
+          // window.location.reload();
+          setIsAdmin(JSON.parse(localStorage.getItem("Admin")));
+        },
+      })
+    );
+    console.log(isAdmin);
+  }, [isAdmin]);
 
   return (
     <div className="App">
@@ -64,9 +81,9 @@ function App() {
             </div>
             {themeSettings && <ThemeSettings />}
             <Routes>
-              <Route path="/:id" element={<Overview />} />
-              <Route path="" element={<Overview />} />
-              <Route path="/overview/:id" element={<Overview />} />
+              {/* <Route path="/:id" element={<Overview />} /> */}
+              <Route exact path="/" element={<Overview />} />
+              <Route path="/overview" element={<Overview />} />
 
               {/* pages  */}
               {/* <Route
@@ -78,13 +95,15 @@ function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignUpPage />} />
               <Route path="/projects" element={<Projects />} />
-              <Route path="/projects/form" element={<ProjectForm />} />
+              <Route path="/projects/add" element={<ProjectForm />} />
+              <Route path="/projects/edit/:id" element={<ProjectForm />} />
               <Route path="/employees" element={<Employees />} />
               <Route path="/tasks" element={<Tasks />} />
               <Route path="/tasks/:id" element={<TaskCard />} />
               <Route path="/tasks/subtasks/:id" element={<Todo />} />
               <Route path="projects/:id" element={<ProjectDetails />} />
-              <Route path="/tasks/form" element={<TaskForm />} />
+              <Route path="/tasks/add" element={<TaskForm />} />
+              <Route path="/tasks/edit/:id" element={<TaskForm />} />
               <Route
                 path="/tasks/subtasks/form/:id"
                 element={<SubTaskForm />}

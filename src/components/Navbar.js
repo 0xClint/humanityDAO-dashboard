@@ -3,10 +3,11 @@ import { AiOutlineMenu } from "react-icons/ai";
 import { RiNotification3Line } from "react-icons/ri";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { TooltipComponent } from "@syncfusion/ej2-react-popups";
-import avatar from "../assets/avatar2.jpg";
+// import avatar from "../assets/avatar2.jpg";
 import { Cart, Chat, Notification, UserProfile } from ".";
 import { useStateContext } from "../contexts/ContextProvider";
 import { Constants } from "../utils/Constants";
+import { BiUserCircle } from "react-icons/bi";
 
 const NavButton = ({ title, customFunc, icon, color, dotColor }) => (
   <TooltipComponent content={title} position="BottomCenter">
@@ -80,11 +81,15 @@ const Navbar = () => {
             className="flex items-center gap-2 cursor-pointer p-1 hover:bg-light-gray rounded-lg"
             onClick={() => handleClick("userProfile")}
           >
-            <img
+            <BiUserCircle
+              className="text-3xl"
+              style={{ color: currentColor }}
+            />
+            {/* <img
               className="rounded-full w-8 h-8"
               src={avatar}
               alt="user-profile"
-            />
+            /> */}
             <p>
               <span className="text-gray-400 text-14">Hi,</span>
               <span className="text-gray-400 font-bold ml-1 text-14">

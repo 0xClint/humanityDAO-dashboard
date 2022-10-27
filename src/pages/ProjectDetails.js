@@ -2,14 +2,15 @@ import React, { useEffect } from "react";
 import { useStateContext } from "../contexts/ContextProvider";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
-import { FetchAllProject } from "../redux/ProjectReducer";
+import { useParams, useNavigate } from "react-router-dom";
+import { DeleteProject, FetchAllProject } from "../redux/ProjectReducer";
 
 const ProjectDetails = () => {
-  const { currentColor } = useStateContext();
+  const { currentColor, isAdmin } = useStateContext();
   const params = useParams();
   const dispatch = useDispatch();
-  console.log(params.id);
+  const navigation = useNavigate();
+  // console.log(params.id);
 
   useEffect(() => {
     dispatch(
@@ -18,6 +19,19 @@ const ProjectDetails = () => {
       })
     );
   }, []);
+
+  const handleDelete = (id) => {
+    console.log(id);
+    dispatch(
+      DeleteProject({
+        query: id,
+        callback: async ({ data }) => {
+          await console.log(data);
+          navigation("/projects");
+        },
+      })
+    );
+  };
 
   let projects = useSelector((data) => data.Projects.projects);
   const projectDetails = projects.filter((item) => item._id == params.id);
@@ -37,22 +51,55 @@ const ProjectDetails = () => {
           <p className="text-3xl font-extrabold  ">
             {projectDetails[0] ? projectDetails[0].title : "no title"}
           </p>
-          <Link to="/tasks">
-            <button
-              style={{ backgroundColor: currentColor }}
-              className="text-xl opacity-0.9 text-white hover:drop-shadow-xl rounded-md  p-3"
-            >
-              Show Tasks
-            </button>
-          </Link>
+          {isAdmin && (
+            <div className="flex gap-5">
+              <Link to="/tasks">
+                <button
+                  style={{ backgroundColor: currentColor }}
+                  className="text-xl opacity-0.9 text-white hover:drop-shadow-xl rounded-md  p-3"
+                >
+                  Show Tasks
+                </button>
+              </Link>
+              <Link
+                to={
+                  projectDetails[0]
+                    ? `/projects/edit/${projectDetails[0]._id}`
+                    : ""
+                }
+              >
+                <button
+                  style={{ backgroundColor: currentColor }}
+                  className="text-xl opacity-0.9 text-white hover:drop-shadow-xl rounded-md  p-3"
+                >
+                  Edit Project
+                </button>
+              </Link>
+
+              <button
+                style={{ backgroundColor: currentColor }}
+                className="text-xl opacity-0.9 text-white hover:drop-shadow-xl rounded-md  p-3"
+                onClick={() => handleDelete(projectDetails[0]._id)}
+              >
+                Delete Project
+              </button>
+            </div>
+          )}
         </div>
         <div className="details text-lg my-14 gap-5 flex flex-col font-medium">
           <div className=" flex">
             Assignee :
-            <div className="assigneeContainer flex">
-              <div className="assignee bg-yellow-300 p-[1px] px-2 rounded-2xl text-white">
-                assigmee
-              </div>
+            <div className="assigneeContainer flex gap-3">
+              {projectDetails[0]
+                ? projectDetails[0].members.map((item) => {
+                    // console.log(item.name);
+                    return (
+                      <div className="assignee bg-yellow-300 p-[1px] px-2 rounded-2xl text-white">
+                        {item.name}
+                      </div>
+                    );
+                  })
+                : ""}
             </div>
           </div>
           <p>
@@ -62,18 +109,6 @@ const ProjectDetails = () => {
             Added By :{" "}
             {projectDetails[0] ? projectDetails[0].addedBy.name : "temp"}
           </p>
-        </div>
-        {/* <div className="description">
-          <h3 className="text-2xl font-semibold">Description :</h3>
-          <p className="my-3 mr-10">
-            do consequat. Duis aute irure dolor in reprehenderit in voluptate
-            velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-            occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-            mollit anim id est laborum.
-          </p>
-        </div> */}
-        <div className="commentSection my-32">
-          <h3 className="text-2xl font-semibold">Comments :</h3>
         </div>
       </div>
     </div>

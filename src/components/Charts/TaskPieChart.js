@@ -4,17 +4,19 @@ import {
   AccumulationSeriesCollectionDirective,
   AccumulationSeriesDirective,
 } from "@syncfusion/ej2-react-charts";
-// import { accData } from "datasource.ts";
 
-const TaskPieChart = (accData) => {
+const tempData = [{ y: 4 }, { y: 5 }];
+
+const TaskPieChart = ({ data }) => {
   return (
     <AccumulationChartComponent id="charts">
       <AccumulationSeriesCollectionDirective>
         <AccumulationSeriesDirective
-          dataSource={accData}
-          xName="x"
+          // dataSource={tempData}
+          dataSource={data}
+          xName="y"
           yName="y"
-          radius="100%"
+          radius="80%"
         ></AccumulationSeriesDirective>
       </AccumulationSeriesCollectionDirective>
     </AccumulationChartComponent>

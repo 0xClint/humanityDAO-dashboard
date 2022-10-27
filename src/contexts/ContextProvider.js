@@ -19,6 +19,7 @@ export const ContextProvider = ({ children }) => {
   const [isHome, setIsHome] = useState(true);
   const [isSidebar, setIsSidebar] = useState(true);
   const [isNavbar, setIsNavbar] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const setMode = (e) => {
     setCurrentMode(e.target.value);
@@ -56,6 +57,8 @@ export const ContextProvider = ({ children }) => {
         setIsSidebar,
         isNavbar,
         setIsNavbar,
+        isAdmin,
+        setIsAdmin,
       }}
     >
       {children}
