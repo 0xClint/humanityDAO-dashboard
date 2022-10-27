@@ -37,9 +37,8 @@ const LoginPage = () => {
             await setIsSidebar(true);
             await setIsNavbar(true);
             await setActiveMenu(true);
-            // navigation("/");
+            navigation("/");
             window.location.reload();
-            // console.log("redirect");
           }
         },
       })
@@ -74,7 +73,7 @@ const LoginPage = () => {
             Password
           </label>
           <input
-            type="text"
+            type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="px-3 py-1.5 font-normal  text-gray-700 bg-white bg-clip-padding mb-2 border border-solid border-gray-300 rounded transition"

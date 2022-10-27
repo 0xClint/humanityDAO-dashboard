@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { earningData, pieChartData } from "../assets/dummy";
+// import { earningData, pieChartData } from "../assets/dummy";
 import { useStateContext } from "../contexts/ContextProvider";
 import Doughnut from "../components/Charts/Pie";
 import { Link, useNavigate } from "react-router-dom";
@@ -42,8 +42,20 @@ const Overview = () => {
   let allTasks = useSelector((data) => data.AllTasks.tasks);
   let employees = useSelector((data) => data.EmployeesList.list);
   let subTaskCount = totalSubTaskCount(allTasks);
-  // console.log(projects, allTasks);
-  console.log(employees);
+  console.log(allTasks);
+
+  const pieChartData = [
+    {
+      x: "subTasks completed",
+      y: subTaskCount[1],
+      text: `${(subTaskCount[1] / subTaskCount[0]) * 100}%`,
+    },
+    {
+      x: "subTasks in-complete",
+      y: subTaskCount[2],
+      text: `${(subTaskCount[2] / subTaskCount[0]) * 100}%`,
+    },
+  ];
   return (
     <div className="mt-12">
       <div className="flex flex-wrap justify-center">
@@ -94,7 +106,7 @@ const Overview = () => {
               <BsKanban className=" text-stone-100" />
             </button>
             <div className="mt-3 text-lg font-semibold ml-3">
-              {subTaskCount}
+              {subTaskCount[0]}
             </div>
             <p className="text-sm text-gray-400 ml-3 mt-1">Total SubTasks</p>
           </div>

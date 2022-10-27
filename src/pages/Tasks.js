@@ -8,16 +8,10 @@ import { Constants } from "../utils/Constants";
 
 const Tasks = () => {
   const { currentColor, isAdmin } = useStateContext();
-  // const [ischeck, setIsCheck] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleCheck = async (subtask) => {
-    // await setIsCheck(subtask.isComplete);
-    // await setIsCheck(!ischeck);
-    // setIsChange(!isChange);
-    // console.log(subtask, ischeck);
-
     const values = {
       data: {
         title: subtask.title,

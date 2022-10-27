@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { FiSettings } from "react-icons/fi";
 import { TooltipComponent } from "@syncfusion/ej2-react-popups";
 import "./App.css";
@@ -17,9 +17,8 @@ import {
   SignUpPage,
 } from "./pages/index";
 import TaskForm from "./pages/TaskForm";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import SubTaskForm from "./pages/SubTaskForm";
-import { Constants } from "./utils/Constants";
 import { UserMe } from "./redux/AuthReducer";
 
 function App() {
@@ -28,7 +27,6 @@ function App() {
     currentColor,
     themeSettings,
     setThemeSettings,
-    isHome,
     isSidebar,
     isNavbar,
     isAdmin,
