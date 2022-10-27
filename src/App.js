@@ -18,9 +18,8 @@ import {
   SignUpPage,
 } from "./pages/index";
 import TaskForm from "./pages/TaskForm";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import SubTaskForm from "./pages/SubTaskForm";
-import { Constants } from "./utils/Constants";
 import { UserMe } from "./redux/AuthReducer";
 
 function App() {
@@ -30,7 +29,6 @@ function App() {
     currentColor,
     themeSettings,
     setThemeSettings,
-    isHome,
     isSidebar,
     isNavbar,
     isAdmin,

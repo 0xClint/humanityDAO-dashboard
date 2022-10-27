@@ -6,12 +6,13 @@ import { useParams } from "react-router-dom";
 import { EditSubTask } from "../redux/SubTaskReducer";
 import { DeleteTask, FetchAllTask, UpdateSubTaskInCache } from "../redux/TaskReducer";
 import TaskPieChart from "../components/Charts/TaskPieChart";
-import { GetCommentTask } from "../redux/CommentReducer";
+import { AddCommentTask, GetCommentTask } from "../redux/CommentReducer";
+import { BiUserCircle } from "react-icons/bi";
 
 const TaskCard = () => {
   const { currentColor, isAdmin } = useStateContext();
   const params = useParams();
-
+  const [comment, setComment] = useState("");
   const dispatch = useDispatch();
   const navigation = useNavigate();
   let count = [0, 0, 0];
@@ -97,7 +98,24 @@ const TaskCard = () => {
   };
   TaskAnalytics();
 
-  console.log(count);
+  const handleComment = () => {
+    const values = {
+      data: {
+        text: comment,
+      },
+      taskid: params.id,
+    };
+
+    dispatch(
+      AddCommentTask({
+        payload: values,
+        callback: async ({ data }) => {
+          await console.log(data);
+          window.location.reload();
+        },
+      })
+    );
+  };
 
   return (
     <div>
@@ -107,8 +125,8 @@ const TaskCard = () => {
           Tasks
         </p>
       </div>
-      <div className="features flex justify-end px-20">
-        {isAdmin && (
+      {isAdmin && (
+        <div className="features flex justify-end px-20">
           <Link
             to={
               TaskDetails[0] && TaskDetails[0]._id
@@ -123,15 +141,15 @@ const TaskCard = () => {
               Edit Task
             </button>
           </Link>
-        )}
-        <button
-          style={{ backgroundColor: currentColor }}
-          onClick={() => handleDelete(TaskDetails[0]._id)}
-          className="text-xl opacity-0.9 text-white hover:drop-shadow-xl rounded-md w-56  p-3 ml-10 "
-        >
-          Delete Task
-        </button>
-      </div>
+          <button
+            style={{ backgroundColor: currentColor }}
+            onClick={() => handleDelete(TaskDetails[0]._id)}
+            className="text-xl opacity-0.9 text-white hover:drop-shadow-xl rounded-md w-56  p-3 ml-10 "
+          >
+            Delete Task
+          </button>
+        </div>
+      )}
       <div className="mainContainer m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl mx-4">
         <div className="taskContent my-5">
           <div className="headContent flex gap-14">
@@ -222,16 +240,37 @@ const TaskCard = () => {
             {allComments
               ? allComments.map((item) => {
                   return (
-                    <div className="comment flex justify-start items-center gap-5 bg-light-gray py-3 px-10 rounded-2xl my-3 w-full">
-                      <div className="userIcon h-12 w-12 rounded-[50%] bg-black"></div>
-                      <div className="comment ">
+                    <div className="comment flex justify-start items-center gap-5  rounded-2xl my-3 w-full">
+                      {/* <div className="userIcon h-12 w-12 rounded-[50%] bg-black"></div> */}
+                      <BiUserCircle
+                        className="text-[3rem]"
+                        style={{ color: currentColor }}
+                      />
+                      <div className="comment bg-light-gray py-3 px-5 rounded-2xl">
                         <p className="font-semibold">{item.addedBy.name}</p>
-                        <p>{item.text}</p>
+                        <p className="text-lg">{item.text}</p>
                       </div>
                     </div>
                   );
                 })
               : ""}
+            <div className="commentInput flex my-10">
+              <input
+                type="text"
+                className="
+                
+            block px-3 py-1.5 font-normal  text-gray-700 bg-white bg-clip-padding border-solid border border-gray-300 transition"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+              />
+              <button
+                style={{ backgroundColor: currentColor }}
+                onClick={() => handleComment()}
+                className="text-xl  text-white hover:drop-shadow-xl rounded-md w-48 p-3 "
+              >
+                Add Comment
+              </button>
+            </div>
           </div>
         </div>
       </div>

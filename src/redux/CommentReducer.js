@@ -20,12 +20,30 @@ export const GetCommentTask = createAsyncThunk(
   }
 );
 
+export const GetCommentSubTask = createAsyncThunk(
+  "dashboard/task/{taskid}/comments",
+  async ({ query, callback }) => {
+    const data = await MakeRequest(Api.GET, {
+      url: Routes.GET_SUBTASK_COMMENTS.replace(":subtaskid", query),
+      type: Type.DASH,
+      query: { text: "" },
+    });
+    if (data.err) {
+      callback("error", data.err, () => {});
+      return null;
+    }
+    callback("success", data.resp, () => {});
+    // console.log(data);
+    return data.resp.data;
+  }
+);
+
 export const AddCommentTask = createAsyncThunk(
   "project",
   async ({ payload, callback }) => {
     const data = await MakeRequest(Api.POST, {
       type: Type.DASH,
-      url: Routes.CREATE_PROJECT,
+      url: Routes.ADD_COMMENT,
       body: payload,
     });
 
@@ -33,6 +51,7 @@ export const AddCommentTask = createAsyncThunk(
       callback("error", data.err, () => {});
       return null;
     }
+    // console.log(data)
     callback("success", data.resp, () => {});
     return { ...data.resp.data, ...payload };
   }
@@ -47,6 +66,13 @@ const CommentSlice = createSlice({
   reducers: {},
   extraReducers: {
     [GetCommentTask.fulfilled]: (state, action) => {
+      // console.log(action.payload);
+      if (action.payload) {
+        const data = action.payload;
+        state.comments = data;
+      }
+    },
+    [GetCommentSubTask.fulfilled]: (state, action) => {
       // console.log(action.payload);
       if (action.payload) {
         const data = action.payload;

@@ -43,9 +43,8 @@ const LoginPage = () => {
             await setIsSidebar(true);
             await setIsNavbar(true);
             await setActiveMenu(true);
-            // navigation("/");
+            navigation("/");
             window.location.reload();
-            // console.log("redirect");
           }
         },
       })
