@@ -2,7 +2,7 @@ import axios from "axios";
 import { Constants } from "./Constants";
 
 // const AUTH_API_ENDPOINT = "https://humanitydao-backend.herokuapp.com/auth";
-const API_ENDPOINT = "http://localhost:3000"||"https://humanitydao-backend.herokuapp.com";
+const API_ENDPOINT = "https://humanitydao-backend.herokuapp.com";
 
 export const MakeRequest = async (method, data) => {
   // export const MakeRequest = async (method, data, callback) => {
