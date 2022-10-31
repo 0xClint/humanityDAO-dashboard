@@ -67,7 +67,7 @@ const UserProfile = () => {
         </div>
         <div className="flex flex-col gap-5 border-b-1 border-color p-4 hover:bg-light-gray cursor-pointer  dark:hover:bg-[#42464D]">
           <Link to={`/employees`}>
-            <p className="font-semibold dark:text-gray-200 ">Employees</p>
+            <p className="font-semibold dark:text-gray-200 ">Members</p>
             <p className="text-gray-500 text-sm dark:text-gray-400">
               view all Members
             </p>
