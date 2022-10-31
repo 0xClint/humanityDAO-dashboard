@@ -69,7 +69,7 @@ const UserProfile = () => {
           <Link to={`/employees`}>
             <p className="font-semibold dark:text-gray-200 ">Employees</p>
             <p className="text-gray-500 text-sm dark:text-gray-400">
-              view all employees
+              view all Members
             </p>
           </Link>
         </div>

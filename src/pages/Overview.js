@@ -38,9 +38,9 @@ const Overview = () => {
     );
   }, []);
 
-  let projects = useSelector(({Projects}) => Projects.projects);
-  let allTasks = useSelector(({AllTasks}) => AllTasks.tasks);
-  let employees = useSelector(({EmployeesList}) => EmployeesList.list);
+  let projects = useSelector(({ Projects }) => Projects.projects);
+  let allTasks = useSelector(({ AllTasks }) => AllTasks.tasks);
+  let employees = useSelector(({ EmployeesList }) => EmployeesList.list);
   let subTaskCount = totalSubTaskCount(allTasks);
   console.log(allTasks);
 
@@ -121,7 +121,7 @@ const Overview = () => {
             <p className="mt-3 text-lg font-semibold ml-3">
               {employees.length ? employees.length : "0"}
             </p>
-            <p className="text-sm text-gray-400 ml-3 mt-1">Total Employees</p>
+            <p className="text-sm text-gray-400 ml-3 mt-1">Total Members</p>
           </div>
         </div>
         <div className="w-[70%] bg-white dark:text-gray-200  dark:bg-secondary-dark-bg rounded-xl p-8 pt-9 m-3 bg-hero-pattern bg-no-repeat bg-cover bg-center">
