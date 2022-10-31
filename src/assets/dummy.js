@@ -477,7 +477,7 @@ export const employeesGrid = [
   // },
   {
     field: "name",
-    headerText: "Employee",
+    headerText: "Member",
     // width: "150",
     textAlign: "Center",
   },
