@@ -533,7 +533,7 @@ export const links = [
         icon: <GrTask />,
       },
       {
-        name: "employees",
+        name: "Members",
         icon: <IoMdContacts />,
       },
     ],

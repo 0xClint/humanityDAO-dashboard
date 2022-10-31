@@ -37,7 +37,7 @@ const LoginPage = () => {
             await setIsSidebar(true);
             await setIsNavbar(true);
             await setActiveMenu(true);
-            navigation("/");
+            navigation("/overview");
             window.location.reload();
           }
         },

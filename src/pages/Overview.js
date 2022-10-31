@@ -119,7 +119,7 @@ const Overview = () => {
               <BsPeopleFill className="" />
             </button>
             <p className="mt-3 text-lg font-semibold ml-3">
-              {employees.length}
+              {employees.length ? employees.length : "0"}
             </p>
             <p className="text-sm text-gray-400 ml-3 mt-1">Total Employees</p>
           </div>

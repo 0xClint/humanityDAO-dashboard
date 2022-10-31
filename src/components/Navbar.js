@@ -67,7 +67,19 @@ const Navbar = () => {
         color={currentColor}
         icon={<AiOutlineMenu />}
       />
+
       <div className="flex">
+        <a
+          href="https://www.tally.xyz/governance/eip155:80001:0x9c4bE5b9D86346fDE9c40ddbb7c6ed8163CeE38D"
+          // target="_blank"
+        >
+          <button
+            style={{ backgroundColor: currentColor }}
+            className="text-xl opacity-0.9 text-white hover:drop-shadow-xl rounded-md font-semibold  py-3 px-6 mx-3  "
+          >
+            Launch DAO
+          </button>
+        </a>
         <NavButton
           title="Notification"
           dotColor="rgb(254, 201, 15)"

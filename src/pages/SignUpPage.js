@@ -124,7 +124,7 @@ const SignUpPage = () => {
             Password
           </label>
           <input
-            type="text"
+            type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="px-3 py-1.5 font-normal  text-gray-700 bg-white bg-clip-padding mb-2 border border-solid border-gray-300 rounded transition"
@@ -136,14 +136,13 @@ const SignUpPage = () => {
         >
           Connect Wallet
         </button>
-        {/* <Link to={`/login`}> */}
+        <div className="min:h-6 text-red-700">{alert ? alert : ""}</div>
         <button
           className="text-xl opacity-0.9 bg-[#5033ff] text-white hover:drop-shadow-xl rounded-md w-full p-3"
           onClick={handleSubmit}
         >
           Sign Up
         </button>
-        {/* </Link> */}
       </div>
     </div>
   );

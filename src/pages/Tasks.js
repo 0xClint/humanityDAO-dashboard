@@ -38,7 +38,7 @@ const Tasks = () => {
 
   useEffect(() => {
     if (!localStorage.getItem(Constants.AUTH_TOKEN)) {
-      console.log(localStorage.getItem(Constants.AUTH_TOKEN), "add");
+      // console.log(localStorage.getItem(Constants.AUTH_TOKEN), "add");
       navigate("/login");
     }
 
@@ -49,6 +49,7 @@ const Tasks = () => {
     );
   }, []);
   let allTasks = useSelector((data) => data.AllTasks.tasks);
+  console.log(allTasks);
 
   return (
     <div>
