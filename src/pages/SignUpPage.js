@@ -4,6 +4,8 @@ import Web3 from "web3";
 import { useDispatch } from "react-redux";
 import { useStateContext } from "../contexts/ContextProvider";
 import { SignUp } from "../redux/AuthReducer";
+import { Constants } from "../utils/Constants";
+import { toast } from "react-toastify";
 
 const SignUpPage = () => {
   const { setIsSidebar, setIsNavbar, setActiveMenu } = useStateContext();
@@ -14,12 +16,20 @@ const SignUpPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigate();
+  React.useEffect(()=>{
+    if(localStorage.getItem(Constants.AUTH_TOKEN)){
+      navigation('/');
+    }
+    else{
+      setIsSidebar(false);
+      setIsNavbar(false);
+      setActiveMenu(false);
+    }
+  },[])
 
   const dispatch = useDispatch();
 
-  setIsSidebar(false);
-  setIsNavbar(false);
-  setActiveMenu(false);
+  
 
   const detectCurrentProvider = () => {
     let provider;
@@ -61,7 +71,7 @@ const SignUpPage = () => {
     const values = {
       email,
       name,
-      address,
+      address:address || "later",
       password,
       // email: "o@gmail.com",
       // password: "Password@123",
@@ -74,12 +84,29 @@ const SignUpPage = () => {
         payload: values,
         callback: (msg, data, recall) => {
           if (msg === "error") {
-            setAlert(data);
-          } else {
             console.log(data);
-            navigation(`/login`);
-            // window.location.reload();
-            recall();
+            setAlert(data);
+            toast.error(data);
+          } else {
+            
+            // navigation(`/login`);
+            if(data.token){
+              localStorage.setItem(Constants.AUTH_TOKEN,JSON.stringify(data.token))
+            }
+            if(data.user){
+              localStorage.setItem(
+                Constants.USER_PROFILE,
+                JSON.stringify(data.user.name)
+              );
+              localStorage.setItem(
+                Constants.USER_ID,
+                JSON.stringify(data.user._id)
+              );
+            }
+            setTimeout(()=>{
+              window.location.replace('/');
+            },1000);
+            // recall();
           }
         },
       })

@@ -38,9 +38,9 @@ const Overview = () => {
     );
   }, []);
 
-  let projects = useSelector((data) => data.Projects.projects);
-  let allTasks = useSelector((data) => data.AllTasks.tasks);
-  let employees = useSelector((data) => data.EmployeesList.list);
+  let projects = useSelector(({Projects}) => Projects.projects);
+  let allTasks = useSelector(({AllTasks}) => AllTasks.tasks);
+  let employees = useSelector(({EmployeesList}) => EmployeesList.list);
   let subTaskCount = totalSubTaskCount(allTasks);
   console.log(allTasks);
 

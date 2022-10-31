@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useStateContext } from "../contexts/ContextProvider";
-import { FetchAllTask } from "../redux/TaskReducer";
+import { FetchAllTask,UpdateSubTaskInCache } from "../redux/TaskReducer";
 import { EditSubTask } from "../redux/SubTaskReducer";
 import { Constants } from "../utils/Constants";
 
@@ -11,7 +11,7 @@ const Tasks = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleCheck = async (subtask) => {
+  const handleCheck = async (subtask,taskid) => {
     const values = {
       data: {
         title: subtask.title,
@@ -23,13 +23,18 @@ const Tasks = () => {
         _id: subtask._id,
       },
     };
-
-    await dispatch(
+    dispatch(UpdateSubTaskInCache({...values.data,taskid}
+    ))
+    dispatch(
       EditSubTask({
         payload: values,
         query: subtask._id,
         callback: async (msg, data, recall) => {
-          await console.log(msg, recall, data);
+          if(msg === "error"){
+            dispatch(UpdateSubTaskInCache({...values.data,taskid}
+              ))
+          }
+          recall();
         },
       })
     );
@@ -79,7 +84,8 @@ const Tasks = () => {
                 <div className="taskContent my-5">
                   <div className="headContent flex gap-14">
                     <div className="left">
-                      <p>2/5 completed</p>
+                      
+                      <p>{(item.subtasks.filter((x)=>x.isComplete)).length}/{item.subtasks.length} completed</p>
                       <Link to={`/tasks/${item._id}`}>
                         <h2 className="text-3xl font-extrabold my-1">
                           {item.title}
@@ -96,19 +102,19 @@ const Tasks = () => {
                   </p>
                   <div className="taskContainer ">
                     {item
-                      ? item.subtasks.map((item) => (
+                      ? item.subtasks.map((subitem) => (
                           <div className="task flex ml-5 gap-3 items-center my-5">
                             <input
                               className="h-6 w-6 border border-gray-300 rounded-3xl checked:bg-[#22A80D] transition duration-200"
                               type="checkbox"
                               value=""
                               // checked={ischeck}
-                              checked={item.isComplete}
-                              onChange={() => handleCheck(item)}
+                              checked={subitem.isComplete}
+                              onChange={() => handleCheck(subitem,item._id)}
                             />
-                            <Link to={`/tasks/subtasks/${item._id}`}>
+                            <Link to={`/tasks/subtasks/${subitem._id}`}>
                               <label className="text-xl cursor-pointer">
-                                {item.title}
+                                {subitem.title}
                               </label>
                             </Link>
                           </div>
